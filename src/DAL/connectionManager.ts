@@ -3,6 +3,7 @@ import { inject, injectable } from 'tsyringe';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import { Services } from '../common/constants';
 import { IConfig, ILogger } from '../common/interfaces';
+import { SettingsRepository } from './repositories/settingsRepository';
 
 @injectable()
 export class ConnectionManager {
@@ -25,6 +26,10 @@ export class ConnectionManager {
 
   public isConnected(): boolean {
     return this.connection !== undefined;
+  }
+
+  public getSettingsRepository(): SettingsRepository {
+    return this.getRepository(SettingsRepository);
   }
 
   private getRepository<T>(repository: ObjectType<T>): T {

@@ -5,7 +5,7 @@ import { ILogger } from '../../common/interfaces';
 import { Services } from '../../common/constants';
 
 @EntityRepository(Setting)
-export class ImageDataRepository extends Repository<Setting> {
+export class SettingsRepository extends Repository<Setting> {
   private readonly appLogger: ILogger; //don't override internal repository logger.
 
   public constructor() {
