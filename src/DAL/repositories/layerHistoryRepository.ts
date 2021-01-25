@@ -24,9 +24,8 @@ export class LayerHistoryRepository extends Repository<LayerHistory> {
     return this.save(layer);
   }
 
-  public async exists(id: string, version: string):Promise<boolean>{
-    const res = await this.get(id,version);
+  public async exists(id: string, version: string): Promise<boolean> {
+    const res = await this.get(id, version);
     return res != undefined;
   }
-
 }
