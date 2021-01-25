@@ -4,6 +4,7 @@ import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConne
 import { Services } from '../common/constants';
 import { IConfig, ILogger } from '../common/interfaces';
 import { SettingsRepository } from './repositories/settingsRepository';
+import { LayerHistoryRepository } from './repositories/layerHistoryRepository';
 
 @injectable()
 export class ConnectionManager {
@@ -30,6 +31,10 @@ export class ConnectionManager {
 
   public getSettingsRepository(): SettingsRepository {
     return this.getRepository(SettingsRepository);
+  }
+
+  public getLayerHistoryRepository(): LayerHistoryRepository {
+    return this.getRepository(LayerHistoryRepository);
   }
 
   private getRepository<T>(repository: ObjectType<T>): T {
