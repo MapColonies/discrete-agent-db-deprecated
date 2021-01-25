@@ -4,3 +4,7 @@ export enum Services {
   LOGGER = 'ILogger',
   CONFIG = 'IConfig',
 }
+
+export enum SettingsKeys {
+  IS_WATCHING = 'IsWatching',
+}
