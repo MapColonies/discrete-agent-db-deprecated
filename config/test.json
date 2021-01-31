@@ -1,17 +1,17 @@
 {
-    "typeOrm": {
-        "type": "postgres",
-        "database": ":memory:",
-        "dropSchema": true,
-        "synchronize": true,
-        "logging": false,
-        "entities": ["dist/src/DAL/entity/**/*.js"],
-        "migrations": ["dist/src/DAL/migration/**/*.js"],
-        "subscribers": ["dist/src/DAL/subscriber/**/*.js"],
-        "cli": {
-          "entitiesDir": "src/DAL/entity",
-          "migrationsDir": "src/DAL/migration",
-          "subscribersDir": "src/DAL/subscriber"
-        }
-      }
+  "typeOrm": {
+    "type": "postgres",
+    "database": ":memory:",
+    "dropSchema": true,
+    "synchronize": true,
+    "logging": false,
+    "entities": ["dist/src/DAL/entity/**/*.js"],
+    "migrations": ["dist/src/DAL/migration/**/*.js"],
+    "subscribers": ["dist/src/DAL/subscriber/**/*.js"],
+    "cli": {
+      "entitiesDir": "src/DAL/entity",
+      "migrationsDir": "src/DAL/migration",
+      "subscribersDir": "src/DAL/subscriber"
+    }
+  }
 }
