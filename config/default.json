@@ -21,7 +21,7 @@
     "synchronize": false,
     "logging": false,
     "entities": ["dist/src/DAL/entity/**/*.js"],
-    "migrations": ["dist/src/DAL/migration/**/*.js"],
+    "migrations": ["dist/src/DAL/migration/**/*.js", "dist/src/DAL/migration/**/*.ts"],
     "subscribers": ["dist/src/DAL/subscriber/**/*.js"],
     "cli": {
       "entitiesDir": "src/DAL/entity",

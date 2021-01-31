@@ -1,3 +1,6 @@
+
+src/DAL/migration/ormConfig.json
+
 # Logs
 logs
 *.log
