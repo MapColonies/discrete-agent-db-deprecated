@@ -9,31 +9,37 @@ info:
 servers:
   - url: http://localhost:8080
 paths:
-  /resourceName:
+  /status:
     get:
-      operationId: getResourceName
+      operationId: getStatus
       tags:
-        - resourceName
-      summary: gets the resource
+        - Status
+      summary: gets the agent status
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/resource'
+                $ref: '#/components/schemas/status'
     post:
-      operationId: createResource
+      operationId: updateStatus
       tags:
-        - resourceName
-      summary: creates a new record of type resource
+        - Status
+      summary: updates the agent status
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/status'
       responses:
-        201:
-          description: created
+        200:
+          description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/resource'
+                $ref: '#/components/schemas/status'
         400:
           description: Bad Request
           content:
@@ -49,17 +55,10 @@ components:
       properties:
         message:
           type: string
-    resource:
+    status:
       type: object
       required:
-        - id
-        - name
-        - description
+        - isWatching
       properties:
-        id:
-          type: number
-          format: int64
-        name:
-          type: string
-        description:
-          type: string
+        isWatching:
+          type: boolean
