@@ -20,7 +20,8 @@
     "start": "npm run build && cd dist && node ./index.js",
     "assets:copy": "copyfiles -f ./config/* ./dist/config && copyfiles -f ./openapi3.yaml ./dist/ && copyfiles ./package.json dist",
     "clean": "rimraf dist",
-    "migration": "node ./src/migration/migration.js",
+    "migration:run": "node ./src/DAL/migration/run-migration.js",
+    "migration:create": "node ./src/DAL/migration/create-migration.js",
     "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js"
   },
   "directories": {
@@ -80,6 +81,7 @@
     "standard-version": "^9.0.0",
     "supertest": "^6.0.1",
     "ts-jest": "^26.3.0",
+    "ts-node": "^9.1.1",
     "typescript": "^3.8.3"
   }
 }
