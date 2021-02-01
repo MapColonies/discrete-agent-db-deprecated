@@ -18,6 +18,7 @@ describe('Status', function () {
   });
   afterEach(function () {
     container.clearInstances();
+    jest.resetAllMocks();
   });
 
   describe('Happy Path', function () {
@@ -49,10 +50,38 @@ describe('Status', function () {
       expect(status.isWatching).toEqual(true);
     });
   });
+
   describe('Bad Path', function () {
     // All requests with status code of 400
+    it('update should return status code 400 on invalid request', async function () {
+      const response = await requestSender.updateStatus(({ invalid: 'data' } as unknown) as IStatus);
+
+      expect(saveMock).toHaveBeenCalledTimes(0);
+      expect(response.status).toBe(httpStatusCodes.BAD_REQUEST);
+    });
   });
+
   describe('Sad Path', function () {
     // All requests with status code 4XX-5XX
+    it('get should return status code 500 on db error', async function () {
+      findOneMock.mockRejectedValue(new Error('test Db error')); //TODO: replace with custom db errors
+
+      const response = await requestSender.getStatus();
+
+      expect(findOneMock).toHaveBeenCalledTimes(1);
+      expect(response.status).toBe(httpStatusCodes.INTERNAL_SERVER_ERROR);
+    });
+
+    it('update should return status code 500 on db error', async function () {
+      saveMock.mockRejectedValue(new Error('test Db error')); //TODO: replace with custom db errors
+      const statusReq: IStatus = {
+        isWatching: true,
+      };
+
+      const response = await requestSender.updateStatus(statusReq);
+
+      expect(saveMock).toHaveBeenCalledTimes(1);
+      expect(response.status).toBe(httpStatusCodes.INTERNAL_SERVER_ERROR);
+    });
   });
 });
