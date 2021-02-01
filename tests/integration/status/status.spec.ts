@@ -1,44 +1,20 @@
 import httpStatusCodes from 'http-status-codes';
 import { container } from 'tsyringe';
-import { newDb } from 'pg-mem'
-import * as typeOrm from 'typeorm'
-import { Setting } from '../../../src/DAL/entity/setting';
-import { LayerHistory } from '../../../src/DAL/entity/layerHistory';
-
 import { IStatus } from '../../../src/status/interfaces';
 import { SettingsRepository } from '../../../src/DAL/repositories/settingsRepository';
 import { registerTestValues } from '../testContainerConfig';
-// eslint-disable-next-line jest/no-mocks-import
-//import { initConnectionMock} from '../../__mocks__/typeorm23';
+import { registerRepository, initTypeOrmMocks, findOneMock, saveMock } from '../../mocks/DBMock';
+import { SettingsKeys } from '../../../src/common/constants';
 import * as requestSender from './helpers/requestSender';
 
-
-
-const initConnectionMock = async (): Promise<void> => {
-  const db = newDb({
-    autoCreateForeignKeyIndices: true,
-  });
-  const connection = (await db.adapters.createTypeormConnection({
-    type: 'postgres',
-    entities: [Setting, LayerHistory],
-  })) as typeOrm.Connection;
-  
-  // create schema
-  await connection.synchronize();
-  jest.spyOn(typeOrm,"createConnection").mockResolvedValue(connection);
-};
-
+const watchingSetting = { key: SettingsKeys.IS_WATCHING, value: 'true' };
 
 describe('Status', function () {
-  beforeAll(function () {
-    //registerTestValues();
-    //requestSender.init();
-  });
-  beforeEach(async () => {
+  beforeEach(() => {
     registerTestValues();
     requestSender.init();
-    await initConnectionMock();
-    //registerRepository(SettingsRepository, new SettingsRepository());
+    initTypeOrmMocks();
+    registerRepository(SettingsRepository, new SettingsRepository());
   });
   afterEach(function () {
     container.clearInstances();
@@ -46,8 +22,12 @@ describe('Status', function () {
 
   describe('Happy Path', function () {
     it('should return 200 status code and the status', async function () {
+      findOneMock.mockResolvedValue(watchingSetting);
+
       const response = await requestSender.getStatus();
 
+      expect(findOneMock).toHaveBeenCalledTimes(1);
+      expect(findOneMock).toHaveBeenCalledWith({ key: SettingsKeys.IS_WATCHING });
       expect(response.status).toBe(httpStatusCodes.OK);
 
       const status = response.body as IStatus;
@@ -55,11 +35,14 @@ describe('Status', function () {
     });
 
     it('should return 200 status code and update the status', async function () {
+      saveMock.mockResolvedValue(watchingSetting);
       const statusReq: IStatus = {
         isWatching: true,
       };
       const response = await requestSender.updateStatus(statusReq);
 
+      expect(saveMock).toHaveBeenCalledTimes(1);
+      expect(saveMock).toHaveBeenCalledWith(watchingSetting);
       expect(response.status).toBe(httpStatusCodes.OK);
 
       const status = response.body as IStatus;
