@@ -15,7 +15,7 @@ export class LayerHistory {
   public version = '';
 
   @Column({ length: 300 })
-  public status?: ProgressStatus;
+  public status: ProgressStatus = ProgressStatus.PENDING;
 
   @CreateDateColumn()
   public createdOn?: Date;
@@ -28,15 +28,20 @@ export class LayerHistory {
   public constructor(layerId: string, version: string, status?: ProgressStatus);
   public constructor(...args: [] | [Partial<LayerHistory>] | [string, string, ProgressStatus?]) {
     const initializerObjectLength = 1;
+    const partialInitializerParametersLength = 2;
     const initializerParametersLength = 3;
     switch (args.length) {
       case initializerObjectLength:
         Object.assign(this, args[0]);
         break;
+      case partialInitializerParametersLength:
+        this.layerId = args[0];
+        this.version = args[1];
+        break;
       case initializerParametersLength:
         this.layerId = args[0];
         this.version = args[1];
-        this.status = args[2];
+        this.status = args[2] ?? ProgressStatus.PENDING;
         break;
       default:
         break;

@@ -18,7 +18,7 @@ export class LayerHistoryRepository extends Repository<LayerHistory> {
     return this.findOne({ layerId: id, version: version });
   }
 
-  public async upsert(layer: LayerHistory): Promise<LayerHistory | undefined> {
+  public async upsert(layer: LayerHistory): Promise<LayerHistory> {
     this.appLogger.log('info', `upserting layer "${layer.layerId} - ${layer.version}". status: "${layer.status as string}"`);
     //TODO: add custom error and logging
     return this.save(layer);

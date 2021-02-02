@@ -5,7 +5,7 @@ export class Setting {
   @PrimaryColumn('varchar', { length: 300 })
   public key = '';
 
-  @Column({ length: 300 })
+  @Column('varchar', { length: 300 })
   public value = '';
 
   public constructor();

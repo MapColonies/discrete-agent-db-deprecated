@@ -7,7 +7,7 @@ const statusRouterFactory: FactoryFunction<Router> = (dependencyContainer) => {
   const controller = dependencyContainer.resolve(StatusController);
 
   router.get('/', controller.getStatus);
-  router.post('/', controller.updateStatus);
+  router.put('/', controller.updateStatus);
 
   return router;
 };

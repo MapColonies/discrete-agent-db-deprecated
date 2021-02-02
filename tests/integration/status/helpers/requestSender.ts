@@ -17,5 +17,5 @@ export async function getStatus(): Promise<supertest.Response> {
 }
 
 export async function updateStatus(status: IStatus): Promise<supertest.Response> {
-  return supertest.agent(app).post('/status').set('Content-Type', 'application/json').send(status);
+  return supertest.agent(app).put('/status').set('Content-Type', 'application/json').send(status);
 }
