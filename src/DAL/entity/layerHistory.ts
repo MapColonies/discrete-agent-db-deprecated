@@ -8,7 +8,7 @@ export enum ProgressStatus {
 
 @Entity()
 export class LayerHistory {
-  @PrimaryColumn('uuid')
+  @PrimaryColumn('varchar', { length: 300 })
   public layerId = '';
 
   @PrimaryColumn('varchar', { length: 30 })
