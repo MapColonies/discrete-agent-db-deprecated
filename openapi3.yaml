@@ -72,7 +72,7 @@ paths:
       operationId: CreateLayerHistory
       tags:
         - LayerHistory
-      summary: gets the history record of specific layer
+      summary: creates history record for specific layer
       parameters:
         - $ref: '#/components/parameters/idParam'
         - $ref: '#/components/parameters/versionParam'
