@@ -7,6 +7,7 @@ import { RequestLogger } from './common/middlewares/RequestLogger';
 import { Services } from './common/constants';
 import { IConfig, ILogger } from './common/interfaces';
 import { statusRouterFactory } from './status/routes/statusRouter';
+import { layerHistoryRouterFactory } from './layerHistory/routes/layerHistoryRouter';
 import { openapiRouterFactory } from './common/routes/openapi';
 
 @injectable()
@@ -31,6 +32,7 @@ export class ServerBuilder {
 
   private buildRoutes(): void {
     this.serverInstance.use('/status', statusRouterFactory(container));
+    this.serverInstance.use('/layers', layerHistoryRouterFactory(container));
     this.serverInstance.use('/', openapiRouterFactory(container));
   }
 

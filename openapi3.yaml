@@ -22,7 +22,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/status'
-    post:
+    put:
       operationId: updateStatus
       tags:
         - Status
@@ -46,7 +46,97 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
+  /layers/{id}/{version}:
+    get:
+      operationId: getLayerHistory
+      tags:
+        - LayerHistory
+      summary: gets the history record of specific layer
+      parameters:
+        - $ref: '#/components/parameters/idParam'
+        - $ref: '#/components/parameters/versionParam'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/layerHistoryRecord'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+    post:
+      operationId: CreateLayerHistory
+      tags:
+        - LayerHistory
+      summary: creates history record for specific layer
+      parameters:
+        - $ref: '#/components/parameters/idParam'
+        - $ref: '#/components/parameters/versionParam'
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/layerHistoryRecord'
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+    put:
+      operationId: UpdateLayerHistoryStatus
+      tags:
+        - LayerHistory
+      summary: update the status of history record for specific layer
+      parameters:
+        - $ref: '#/components/parameters/idParam'
+        - $ref: '#/components/parameters/versionParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  $ref: '#/components/schemas/historyStatus'
+              required:
+                - status
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/layerHistoryRecord'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
 components:
+  parameters:
+    idParam:
+      name: id
+      in: path
+      description: layer id
+      required: true
+      schema:
+        type: string
+    versionParam:
+      name: version
+      in: path
+      description: layer version
+      required: true
+      schema:
+        type: string
   schemas:
     error:
       type: object
@@ -62,3 +152,18 @@ components:
       properties:
         isWatching:
           type: boolean
+    layerHistoryRecord:
+      type: object
+      properties:
+        id:
+          type: string
+        version:
+          type: string
+        status:
+          $ref: '#/components/schemas/historyStatus'
+    historyStatus:
+      type: string
+      enum:
+        - pending
+        - inProgress
+        - triggered

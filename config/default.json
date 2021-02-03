@@ -20,9 +20,9 @@
     "database": "test",
     "synchronize": false,
     "logging": false,
-    "entities": ["dist/src/DAL/entity/**/*.js"],
-    "migrations": ["dist/src/DAL/migration/**/*.js", "dist/src/DAL/migration/**/*.ts"],
-    "subscribers": ["dist/src/DAL/subscriber/**/*.js"],
+    "entities": ["**/DAL/entity/**/*.js"],
+    "migrations": ["**/DAL/migration/**/*.js", "**/DAL/migration/**/*.ts"],
+    "subscribers": ["**/DAL/subscriber/**/*.js"],
     "cli": {
       "entitiesDir": "src/DAL/entity",
       "migrationsDir": "src/DAL/migration",

@@ -1,12 +1,12 @@
 import { createConnection, Connection, ObjectType } from 'typeorm';
-import { inject, injectable } from 'tsyringe';
+import { inject, singleton } from 'tsyringe';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import { Services } from '../common/constants';
 import { IConfig, ILogger } from '../common/interfaces';
 import { SettingsRepository } from './repositories/settingsRepository';
 import { LayerHistoryRepository } from './repositories/layerHistoryRepository';
 
-@injectable()
+@singleton()
 export class ConnectionManager {
   private connection?: Connection;
 
