@@ -1,5 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 import { Services } from '../../common/constants';
+import { HTTP_DUPLICATE, HTTP_NOT_FOUND } from '../../common/httpErrors';
 import { ILogger } from '../../common/interfaces';
 import { ConnectionManager } from '../../DAL/connectionManager';
 import { LayerHistory, ProgressStatus } from '../../DAL/entity/layerHistory';
@@ -18,8 +19,7 @@ export class LayerHistoryManager {
     if (entity !== undefined) {
       return this.entityToModel(entity);
     } else {
-      // TODO: replace with costume error that will be handled as 404
-      throw new Error('record not found');
+      throw HTTP_NOT_FOUND;
     }
   }
 
@@ -27,8 +27,7 @@ export class LayerHistoryManager {
     const repository = await this.getRepository();
     const exists = await repository.exists(id.id, id.version);
     if (exists) {
-      // TODO: replace with costume error that will be handled as conflict
-      throw new Error('duplicate record');
+      throw HTTP_DUPLICATE;
     }
     const layer = new LayerHistory(id.id, id.version);
     const entity = await repository.upsert(layer);
@@ -47,8 +46,7 @@ export class LayerHistoryManager {
       const entity = await repository.upsert(layer);
       return this.entityToModel(entity);
     } else {
-      // TODO: replace with costume error that will be handled as 404
-      throw new Error('record not found');
+      throw HTTP_NOT_FOUND;
     }
   }
 
