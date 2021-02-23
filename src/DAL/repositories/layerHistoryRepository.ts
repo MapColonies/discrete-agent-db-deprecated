@@ -1,4 +1,4 @@
-import { Repository, EntityRepository, QueryFailedError } from 'typeorm';
+import { Repository, EntityRepository } from 'typeorm';
 import { container } from 'tsyringe';
 import { ILogger } from '../../common/interfaces';
 import { Services } from '../../common/constants';
@@ -15,10 +15,10 @@ export class LayerHistoryRepository extends Repository<LayerHistory> {
   }
 
   public async get(id: string, version: string): Promise<LayerHistory | undefined> {
-    try{
+    try {
       return await this.findOne({ layerId: id, version: version });
-    } catch(err){
-      if(err !== undefined){
+    } catch (err) {
+      if (err !== undefined) {
         this.appLogger.log('error', `get layer "${id} - ${version}". error: ${JSON.stringify(err)}`);
         throw HTTP_INTERNAL_SERVER_ERROR;
       }
@@ -28,9 +28,9 @@ export class LayerHistoryRepository extends Repository<LayerHistory> {
 
   public async upsert(layer: LayerHistory): Promise<LayerHistory> {
     this.appLogger.log('info', `upserting layer "${layer.layerId} - ${layer.version}". status: "${layer.status as string}"`);
-    try{
+    try {
       return await this.save(layer);
-    } catch(err){
+    } catch (err) {
       this.appLogger.log('error', `upsert layer: ${JSON.stringify(layer)}. error: ${JSON.stringify(err)}`);
       throw HTTP_INTERNAL_SERVER_ERROR;
     }
