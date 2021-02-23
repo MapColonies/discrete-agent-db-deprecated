@@ -100,7 +100,7 @@ describe('LayerHistory', function () {
   describe('Sad Path', function () {
     // All requests with status code 4XX-5XX
     it('get should return 404 status code when given none existing id', async function () {
-      findOneMock.mockRejectedValue(undefined);
+      findOneMock.mockResolvedValue(undefined);
       const response = await requestSender.getHistory(historyIdentifier);
 
       expect(response.status).toBe(httpStatusCodes.NOT_FOUND);
