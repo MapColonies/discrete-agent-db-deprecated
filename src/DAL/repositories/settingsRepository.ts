@@ -3,6 +3,7 @@ import { container } from 'tsyringe';
 import { Setting } from '../entity/setting';
 import { ILogger } from '../../common/interfaces';
 import { Services } from '../../common/constants';
+import { HTTP_INTERNAL_SERVER_ERROR } from '../../common/httpErrors';
 
 @EntityRepository(Setting)
 export class SettingsRepository extends Repository<Setting> {
@@ -14,18 +15,33 @@ export class SettingsRepository extends Repository<Setting> {
   }
 
   public async get(key: string): Promise<Setting | undefined> {
-    //TODO: add custom error and logging
-    return this.findOne({ key: key });
+    try {
+      return await this.findOne({ key: key });
+    } catch (err) {
+      if (err !== undefined) {
+        this.appLogger.log('error', `get settings "${key}". error: ${JSON.stringify(err)}`);
+        throw HTTP_INTERNAL_SERVER_ERROR;
+      }
+      return undefined;
+    }
   }
 
   public async upsert(setting: Setting): Promise<Setting | undefined> {
     this.appLogger.log('info', `updated setting "${setting.key}" to "${setting.value}"`);
-    //TODO: add custom error and logging
-    return this.save(setting);
+    try {
+      return await this.save(setting);
+    } catch (err) {
+      this.appLogger.log('error', `upsert settings: ${JSON.stringify(setting)}. error: ${JSON.stringify(err)}`);
+      throw HTTP_INTERNAL_SERVER_ERROR;
+    }
   }
 
   public async getAll(): Promise<Setting[] | undefined> {
-    //TODO: add custom error and logging
-    return this.find();
+    try {
+      return await this.find();
+    } catch (err) {
+      this.appLogger.log('error', `get all settings. error: ${JSON.stringify(err)}`);
+      throw HTTP_INTERNAL_SERVER_ERROR;
+    }
   }
 }

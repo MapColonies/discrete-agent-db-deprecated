@@ -64,7 +64,7 @@ describe('Status', function () {
   describe('Sad Path', function () {
     // All requests with status code 4XX-5XX
     it('get should return status code 500 on db error', async function () {
-      findOneMock.mockRejectedValue(new Error('test Db error')); //TODO: replace with custom db errors
+      findOneMock.mockRejectedValue(new Error('test Db error'));
 
       const response = await requestSender.getStatus();
 
@@ -73,7 +73,7 @@ describe('Status', function () {
     });
 
     it('update should return status code 500 on db error', async function () {
-      saveMock.mockRejectedValue(new Error('test Db error')); //TODO: replace with custom db errors
+      saveMock.mockRejectedValue(new Error('test Db error'));
       const statusReq: IStatus = {
         isWatching: true,
       };

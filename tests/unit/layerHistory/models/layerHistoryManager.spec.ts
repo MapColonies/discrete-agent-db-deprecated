@@ -1,3 +1,4 @@
+import { HTTP_DUPLICATE, HTTP_NOT_FOUND } from '../../../../src/common/httpErrors';
 import { ConnectionManager } from '../../../../src/DAL/connectionManager';
 import { LayerHistory, ProgressStatus } from '../../../../src/DAL/entity/layerHistory';
 import { ILayerHistoryIdentifier, ILayerHistoryResponse } from '../../../../src/layerHistory/interfaces';
@@ -67,7 +68,7 @@ describe('LayerHistoryManager', () => {
       };
 
       // expectation
-      await expect(action).rejects.toThrow(Error); //TODO: replace with costume notFound error
+      await expect(action).rejects.toEqual(HTTP_NOT_FOUND);
       expect(getMock).toHaveBeenCalledTimes(1);
       expect(getMock).toHaveBeenCalledWith(historyIdentifier.id, historyIdentifier.version);
     });
@@ -94,7 +95,7 @@ describe('LayerHistoryManager', () => {
         await layerHistoryManager.updateStatus(historyIdentifier, ProgressStatus.TRIGGERED);
       };
       // expectation
-      await expect(action).rejects.toThrow(Error); //TODO: replace with costume notFound error
+      await expect(action).rejects.toEqual(HTTP_NOT_FOUND);
       expect(upsertMock).toHaveBeenCalledTimes(0);
       expect(existsMock).toHaveBeenCalledTimes(1);
     });
@@ -121,7 +122,7 @@ describe('LayerHistoryManager', () => {
         await layerHistoryManager.create(historyIdentifier);
       };
       // expectation
-      await expect(action).rejects.toThrow(Error); //TODO: replace with costume notFound error
+      await expect(action).rejects.toEqual(HTTP_DUPLICATE);
       expect(upsertMock).toHaveBeenCalledTimes(0);
       expect(existsMock).toHaveBeenCalledTimes(1);
     });

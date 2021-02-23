@@ -103,9 +103,7 @@ describe('LayerHistory', function () {
       findOneMock.mockResolvedValue(undefined);
       const response = await requestSender.getHistory(historyIdentifier);
 
-      //TODO: replace expected 500 with 404 when error handling is added
-      expect(response.status).toBe(httpStatusCodes.INTERNAL_SERVER_ERROR);
-      //expect(response.status).toBe(httpStatusCodes.NOT_FOUND);
+      expect(response.status).toBe(httpStatusCodes.NOT_FOUND);
       expect(saveMock).toHaveBeenCalledTimes(0);
       expect(findOneMock).toHaveBeenCalledTimes(1);
       expect(findOneMock).toHaveBeenCalledWith(findRequest);
@@ -117,9 +115,7 @@ describe('LayerHistory', function () {
         status: ProgressStatus.TRIGGERED,
       });
 
-      //TODO: replace expected 500 with 404 when error handling is added
-      expect(response.status).toBe(httpStatusCodes.INTERNAL_SERVER_ERROR);
-      //expect(response.status).toBe(httpStatusCodes.NOT_FOUND);
+      expect(response.status).toBe(httpStatusCodes.NOT_FOUND);
       expect(saveMock).toHaveBeenCalledTimes(0);
       expect(findOneMock).toHaveBeenCalledTimes(1);
       expect(findOneMock).toHaveBeenCalledWith(findRequest);
@@ -129,16 +125,13 @@ describe('LayerHistory', function () {
       findOneMock.mockResolvedValue(pendingHistoryRecord);
       const response = await requestSender.createHistory(historyIdentifier);
 
-      //TODO: replace expected 500 with 409 when error handling is added
-      expect(response.status).toBe(httpStatusCodes.INTERNAL_SERVER_ERROR);
-      //expect(response.status).toBe(httpStatusCodes.CONFLICT);
+      expect(response.status).toBe(httpStatusCodes.CONFLICT);
       expect(saveMock).toHaveBeenCalledTimes(0);
       expect(findOneMock).toHaveBeenCalledTimes(1);
       expect(findOneMock).toHaveBeenCalledWith(findRequest);
     });
 
     it('get should return 500 status on db error', async function () {
-      //TODO: replace with costume error
       findOneMock.mockRejectedValue(new Error('test db error'));
 
       const response = await requestSender.getHistory(historyIdentifier);
@@ -150,8 +143,7 @@ describe('LayerHistory', function () {
     });
 
     it('update should return 500 status on find db error', async function () {
-      //TODO: replace with costume error
-      findOneMock.mockRejectedValue(new Error('test db error'));
+      findOneMock.mockRejectedValue({ name: 'DUMMY_DB_ERROR', message: 'DUMMY DB ERROR' });
 
       const response = await requestSender.updateHistoryStatus(historyIdentifier, {
         status: ProgressStatus.TRIGGERED,
@@ -165,7 +157,6 @@ describe('LayerHistory', function () {
 
     it('update should return 500 status on save db error', async function () {
       findOneMock.mockResolvedValue(pendingHistoryRecord);
-      //TODO: replace with costume error
       saveMock.mockRejectedValue(new Error('test db error'));
 
       const response = await requestSender.updateHistoryStatus(historyIdentifier, {
@@ -179,7 +170,6 @@ describe('LayerHistory', function () {
     });
 
     it('create should return 500 status on find db error', async function () {
-      //TODO: replace with costume error
       findOneMock.mockRejectedValue(new Error('test db error'));
 
       const response = await requestSender.createHistory(historyIdentifier);
@@ -192,7 +182,6 @@ describe('LayerHistory', function () {
 
     it('create should return 500 status on save db error', async function () {
       findOneMock.mockResolvedValue(undefined);
-      //TODO: replace with costume error
       saveMock.mockRejectedValue(new Error('test db error'));
 
       const response = await requestSender.createHistory(historyIdentifier);
