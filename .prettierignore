@@ -10,3 +10,4 @@ reports
 *.json
 *.js
 node_modules
+src/DAL/migration
