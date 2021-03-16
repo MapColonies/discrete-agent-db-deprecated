@@ -18,7 +18,7 @@
     "username": "test",
     "password": "test",
     "database": "test",
-    "synchronize": true,
+    "synchronize": false,
     "logging": false,
     "entities": [
       "**/DAL/entity/**/*.js"
