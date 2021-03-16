@@ -1,16 +1,14 @@
 import { ProgressStatus } from '../DAL/entity/layerHistory';
 
 export interface ILayerHistoryResponse {
-  id: string; // directory name
-  version: string; // subdirectory name
-  status: ProgressStatus;
-}
-
-export interface ILayerHistoryIdentifier {
-  id: string; // directory name
-  version: string; // subdirectory name
+  directory: string;
+  id?: string;
+  version?: string;
+  status?: ProgressStatus;
 }
 
 export interface IUpdateLayerHistoryStatusRequestBody {
-  status: ProgressStatus;
+  id?: string;
+  version?: string;
+  status?: ProgressStatus;
 }

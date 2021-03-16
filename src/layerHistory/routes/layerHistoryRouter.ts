@@ -6,9 +6,9 @@ const layerHistoryRouterFactory: FactoryFunction<Router> = (dependencyContainer)
   const router = Router();
   const controller = dependencyContainer.resolve(LayerHistoryController);
 
-  router.get('/:id/:version', controller.getLayerHistory);
-  router.post('/:id/:version', controller.createLayerHistory);
-  router.put('/:id/:version', controller.updateLayerHistoryStatus);
+  router.get('/:directory', controller.getLayerHistory);
+  router.post('/:directory', controller.createLayerHistory);
+  router.put('/:directory', controller.updateLayerHistoryStatus);
 
   return router;
 };

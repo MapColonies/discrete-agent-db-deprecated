@@ -5,7 +5,7 @@ import { ILogger } from '../../common/interfaces';
 import { ConnectionManager } from '../../DAL/connectionManager';
 import { LayerHistory, ProgressStatus } from '../../DAL/entity/layerHistory';
 import { LayerHistoryRepository } from '../../DAL/repositories/layerHistoryRepository';
-import { ILayerHistoryIdentifier, ILayerHistoryResponse } from '../interfaces';
+import { ILayerHistoryResponse } from '../interfaces';
 
 @injectable()
 export class LayerHistoryManager {
@@ -13,9 +13,9 @@ export class LayerHistoryManager {
 
   public constructor(@inject(Services.LOGGER) private readonly logger: ILogger, private readonly connectionManager: ConnectionManager) {}
 
-  public async get(id: ILayerHistoryIdentifier): Promise<ILayerHistoryResponse | undefined> {
+  public async get(directory: string): Promise<ILayerHistoryResponse | undefined> {
     const repository = await this.getRepository();
-    const entity = await repository.get(id.id, id.version);
+    const entity = await repository.get(directory);
     if (entity !== undefined) {
       return this.entityToModel(entity);
     } else {
@@ -23,26 +23,31 @@ export class LayerHistoryManager {
     }
   }
 
-  public async create(id: ILayerHistoryIdentifier): Promise<ILayerHistoryResponse> {
+  public async create(directory: string): Promise<ILayerHistoryResponse> {
     const repository = await this.getRepository();
-    const exists = await repository.exists(id.id, id.version);
+    const exists = await repository.exists(directory);
     if (exists) {
       throw HTTP_DUPLICATE;
     }
-    const layer = new LayerHistory(id.id, id.version);
+    const layer = new LayerHistory({ directory });
     const entity = await repository.upsert(layer);
     return this.entityToModel(entity);
   }
 
-  public async updateStatus(id: ILayerHistoryIdentifier, status: ProgressStatus): Promise<ILayerHistoryResponse> {
+  public async updateStatus(directory: string, status?: ProgressStatus, id?: string, version?: string): Promise<ILayerHistoryResponse> {
     const repository = await this.getRepository();
-    const exists = await repository.exists(id.id, id.version);
+    const exists = await repository.exists(directory);
     if (exists) {
-      const layer = new LayerHistory({
-        layerId: id.id,
-        version: id.version,
-        status: status,
-      });
+      const layer = new LayerHistory({ directory });
+      if (status != undefined) {
+        layer.status = status;
+      }
+      if (id != undefined) {
+        layer.layerId = id;
+      }
+      if (version != undefined) {
+        layer.version = version;
+      }
       const entity = await repository.upsert(layer);
       return this.entityToModel(entity);
     } else {
@@ -62,6 +67,7 @@ export class LayerHistoryManager {
 
   private entityToModel(entity: LayerHistory): ILayerHistoryResponse {
     const model: ILayerHistoryResponse = {
+      directory: entity.directory,
       id: entity.layerId,
       version: entity.version,
       status: entity.status,

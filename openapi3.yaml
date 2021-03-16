@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  title: service-name
+  title: Discrete-agent-DB
   description: basic template for map colonies service
   version: 1.0.0
   license:
@@ -46,15 +46,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
-  /layers/{id}/{version}:
+  /layers/{directory}:
     get:
       operationId: getLayerHistory
       tags:
         - LayerHistory
       summary: gets the history record of specific layer
       parameters:
-        - $ref: '#/components/parameters/idParam'
-        - $ref: '#/components/parameters/versionParam'
+        - $ref: '#/components/parameters/directoryParam'
       responses:
         200:
           description: OK
@@ -74,8 +73,7 @@ paths:
         - LayerHistory
       summary: creates history record for specific layer
       parameters:
-        - $ref: '#/components/parameters/idParam'
-        - $ref: '#/components/parameters/versionParam'
+        - $ref: '#/components/parameters/directoryParam'
       responses:
         201:
           description: Created
@@ -95,8 +93,7 @@ paths:
         - LayerHistory
       summary: update the status of history record for specific layer
       parameters:
-        - $ref: '#/components/parameters/idParam'
-        - $ref: '#/components/parameters/versionParam'
+        - $ref: '#/components/parameters/directoryParam'
       requestBody:
         required: true
         content:
@@ -104,10 +101,12 @@ paths:
             schema:
               type: object
               properties:
+                id:
+                  type: string
+                version:
+                  type: string
                 status:
                   $ref: '#/components/schemas/historyStatus'
-              required:
-                - status
       responses:
         200:
           description: OK
@@ -123,17 +122,10 @@ paths:
                 $ref: '#/components/schemas/error'
 components:
   parameters:
-    idParam:
-      name: id
+    directoryParam:
+      name: directory
       in: path
-      description: layer id
-      required: true
-      schema:
-        type: string
-    versionParam:
-      name: version
-      in: path
-      description: layer version
+      description: layer source directory
       required: true
       schema:
         type: string
@@ -155,6 +147,8 @@ components:
     layerHistoryRecord:
       type: object
       properties:
+        directory:
+          type: string
         id:
           type: string
         version:
@@ -164,6 +158,6 @@ components:
     historyStatus:
       type: string
       enum:
-        - pending
         - inProgress
         - triggered
+        - failed

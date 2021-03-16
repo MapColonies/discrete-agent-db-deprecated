@@ -14,12 +14,12 @@ export class LayerHistoryRepository extends Repository<LayerHistory> {
     this.appLogger = container.resolve(Services.LOGGER); //direct injection don't work here due to being initialized by typeOrm
   }
 
-  public async get(id: string, version: string): Promise<LayerHistory | undefined> {
+  public async get(directory: string): Promise<LayerHistory | undefined> {
     try {
-      return await this.findOne({ layerId: id, version: version });
+      return await this.findOne({ directory: directory });
     } catch (err) {
       if (err !== undefined) {
-        this.appLogger.log('error', `get layer "${id} - ${version}". error: ${JSON.stringify(err)}`);
+        this.appLogger.log('error', `get history for "${directory}". error: ${JSON.stringify(err)}`);
         throw HTTP_INTERNAL_SERVER_ERROR;
       }
       return undefined;
@@ -27,17 +27,19 @@ export class LayerHistoryRepository extends Repository<LayerHistory> {
   }
 
   public async upsert(layer: LayerHistory): Promise<LayerHistory> {
-    this.appLogger.log('info', `upserting layer "${layer.layerId} - ${layer.version}". status: "${layer.status as string}"`);
+    this.appLogger.log('info', `upserting history for "${layer.directory}".`);
     try {
+      console.log(JSON.stringify(layer));
       return await this.save(layer);
+      //this.cr;
     } catch (err) {
-      this.appLogger.log('error', `upsert layer: ${JSON.stringify(layer)}. error: ${JSON.stringify(err)}`);
+      this.appLogger.log('error', `failed to upsert history: ${JSON.stringify(layer)}. error: ${JSON.stringify(err)}`);
       throw HTTP_INTERNAL_SERVER_ERROR;
     }
   }
 
-  public async exists(id: string, version: string): Promise<boolean> {
-    const res = await this.get(id, version);
+  public async exists(directory: string): Promise<boolean> {
+    const res = await this.get(directory);
     return res != undefined;
   }
 }

@@ -1,21 +1,24 @@
 import { Entity, Column, PrimaryColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 export enum ProgressStatus {
-  PENDING = 'pending',
   IN_PROGRESS = 'inProgress',
   TRIGGERED = 'triggered',
+  FAILED = 'failed',
 }
 
 @Entity()
 export class LayerHistory {
   @PrimaryColumn('varchar', { length: 300 })
-  public layerId = '';
+  public directory = '';
 
-  @PrimaryColumn('varchar', { length: 30 })
-  public version = '';
+  @Column('varchar', { length: 300, nullable: true })
+  public layerId: string | undefined;
 
-  @Column({ length: 300 })
-  public status: ProgressStatus = ProgressStatus.PENDING;
+  @Column('varchar', { length: 30, nullable: true })
+  public version: string | undefined;
+
+  @Column({ type: 'enum', enum: ProgressStatus, default: ProgressStatus.IN_PROGRESS })
+  public status: ProgressStatus | undefined;
 
   @CreateDateColumn()
   public createdOn?: Date;
@@ -25,26 +28,9 @@ export class LayerHistory {
 
   public constructor();
   public constructor(init: Partial<LayerHistory>);
-  public constructor(layerId: string, version: string, status?: ProgressStatus);
-  public constructor(...args: [] | [Partial<LayerHistory>] | [string, string, ProgressStatus?]) {
-    const initializerObjectLength = 1;
-    const partialInitializerParametersLength = 2;
-    const initializerParametersLength = 3;
-    switch (args.length) {
-      case initializerObjectLength:
-        Object.assign(this, args[0]);
-        break;
-      case partialInitializerParametersLength:
-        this.layerId = args[0];
-        this.version = args[1];
-        break;
-      case initializerParametersLength:
-        this.layerId = args[0];
-        this.version = args[1];
-        this.status = args[2] ?? ProgressStatus.PENDING;
-        break;
-      default:
-        break;
+  public constructor(...args: [] | [Partial<LayerHistory>]) {
+    if (args.length == 1) {
+      Object.assign(this, args[0]);
     }
   }
 }
