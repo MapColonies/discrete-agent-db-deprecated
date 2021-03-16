@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  title: service-name
+  title: Discrete-agent-DB
   description: basic template for map colonies service
   version: 1.0.0
   license:
@@ -164,6 +164,6 @@ components:
     historyStatus:
       type: string
       enum:
-        - pending
         - inProgress
         - triggered
+        - failed

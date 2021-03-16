@@ -1,9 +1,9 @@
 import { Entity, Column, PrimaryColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 export enum ProgressStatus {
-  PENDING = 'pending',
   IN_PROGRESS = 'inProgress',
   TRIGGERED = 'triggered',
+  FAILED = 'failed',
 }
 
 @Entity()
@@ -14,8 +14,8 @@ export class LayerHistory {
   @PrimaryColumn('varchar', { length: 30 })
   public version = '';
 
-  @Column({ length: 300 })
-  public status: ProgressStatus = ProgressStatus.PENDING;
+  @Column({ type: 'enum', enum: ProgressStatus, default: ProgressStatus.IN_PROGRESS })
+  public status: ProgressStatus = ProgressStatus.IN_PROGRESS;
 
   @CreateDateColumn()
   public createdOn?: Date;
@@ -41,7 +41,7 @@ export class LayerHistory {
       case initializerParametersLength:
         this.layerId = args[0];
         this.version = args[1];
-        this.status = args[2] ?? ProgressStatus.PENDING;
+        this.status = args[2] ?? ProgressStatus.IN_PROGRESS;
         break;
       default:
         break;
