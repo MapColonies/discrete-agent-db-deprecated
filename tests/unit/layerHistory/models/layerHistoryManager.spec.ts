@@ -1,7 +1,7 @@
 import { HTTP_DUPLICATE, HTTP_NOT_FOUND } from '../../../../src/common/httpErrors';
 import { ConnectionManager } from '../../../../src/DAL/connectionManager';
 import { LayerHistory, ProgressStatus } from '../../../../src/DAL/entity/layerHistory';
-import { ILayerHistoryIdentifier, ILayerHistoryResponse } from '../../../../src/layerHistory/interfaces';
+import { ILayerHistoryResponse } from '../../../../src/layerHistory/interfaces';
 import { LayerHistoryManager } from '../../../../src/layerHistory/models/layerHistoryManager';
 
 let layerHistoryManager: LayerHistoryManager;
@@ -24,22 +24,28 @@ const repositoryMock = {
 };
 
 //test data
-const historyIdentifier: ILayerHistoryIdentifier = {
-  id: 'testId',
-  version: 'testVersion',
-};
-const pendingHistoryResponse: ILayerHistoryResponse = {
-  id: 'testId',
-  version: 'testVersion',
-  status: ProgressStatus.PENDING,
+const historyIdentifier = '1/1';
+const newInProgressHistoryResponse: ILayerHistoryResponse = {
+  directory: historyIdentifier,
+  status: ProgressStatus.IN_PROGRESS,
 };
 const triggeredHistoryResponse: ILayerHistoryResponse = {
+  directory: historyIdentifier,
   id: 'testId',
   version: 'testVersion',
   status: ProgressStatus.TRIGGERED,
 };
-const pendingHistoryRecord = new LayerHistory('testId', 'testVersion');
-const triggeredHistoryRecord = new LayerHistory('testId', 'testVersion', ProgressStatus.TRIGGERED);
+const newInProgressHistoryRecord = new LayerHistory({ directory: historyIdentifier, status: ProgressStatus.IN_PROGRESS });
+const triggeredHistoryRecord = new LayerHistory({
+  directory: historyIdentifier,
+  layerId: 'testId',
+  version: 'testVersion',
+  status: ProgressStatus.TRIGGERED,
+});
+const setTriggeredHistoryRecord = new LayerHistory({
+  directory: historyIdentifier,
+  status: ProgressStatus.TRIGGERED,
+});
 
 describe('LayerHistoryManager', () => {
   beforeEach(function () {
@@ -50,14 +56,14 @@ describe('LayerHistoryManager', () => {
 
   describe('getLayerHistory', () => {
     it('returns layer history when exists', async function () {
-      getMock.mockResolvedValue(pendingHistoryRecord);
+      getMock.mockResolvedValue(triggeredHistoryRecord);
       // action
       const resource = await layerHistoryManager.get(historyIdentifier);
 
       // expectation
-      expect(resource).toEqual(pendingHistoryResponse);
+      expect(resource).toEqual(triggeredHistoryResponse);
       expect(getMock).toHaveBeenCalledTimes(1);
-      expect(getMock).toHaveBeenCalledWith(historyIdentifier.id, historyIdentifier.version);
+      expect(getMock).toHaveBeenCalledWith(historyIdentifier);
     });
 
     it('throws error when not exists', async function () {
@@ -70,7 +76,7 @@ describe('LayerHistoryManager', () => {
       // expectation
       await expect(action).rejects.toEqual(HTTP_NOT_FOUND);
       expect(getMock).toHaveBeenCalledTimes(1);
-      expect(getMock).toHaveBeenCalledWith(historyIdentifier.id, historyIdentifier.version);
+      expect(getMock).toHaveBeenCalledWith(historyIdentifier);
     });
   });
 
@@ -83,7 +89,7 @@ describe('LayerHistoryManager', () => {
 
       // expectation
       expect(resource).toEqual(triggeredHistoryResponse);
-      expect(upsertMock).toHaveBeenCalledWith(triggeredHistoryRecord);
+      expect(upsertMock).toHaveBeenCalledWith(setTriggeredHistoryRecord);
       expect(upsertMock).toHaveBeenCalledTimes(1);
       expect(existsMock).toHaveBeenCalledTimes(1);
     });
@@ -104,13 +110,13 @@ describe('LayerHistoryManager', () => {
   describe('CreateHistory', () => {
     it('history is created and returned', async function () {
       existsMock.mockResolvedValue(false);
-      upsertMock.mockResolvedValue(pendingHistoryRecord);
+      upsertMock.mockResolvedValue(newInProgressHistoryRecord);
       // action
       const resource = await layerHistoryManager.create(historyIdentifier);
 
       // expectation
-      expect(resource).toEqual(pendingHistoryResponse);
-      expect(upsertMock).toHaveBeenCalledWith(pendingHistoryRecord);
+      expect(resource).toEqual(newInProgressHistoryResponse);
+      expect(upsertMock).toHaveBeenCalledWith({ directory: historyIdentifier });
       expect(upsertMock).toHaveBeenCalledTimes(1);
       expect(existsMock).toHaveBeenCalledTimes(1);
     });

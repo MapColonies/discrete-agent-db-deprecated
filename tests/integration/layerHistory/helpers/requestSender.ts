@@ -3,7 +3,6 @@ import { Application } from 'express';
 
 import { container } from 'tsyringe';
 import { ServerBuilder } from '../../../../src/serverBuilder';
-import { ILayerHistoryIdentifier } from '../../../../src/layerHistory/interfaces';
 
 let app: Application | null = null;
 
@@ -12,14 +11,17 @@ export function init(): void {
   app = builder.build();
 }
 
-export async function getHistory(id: ILayerHistoryIdentifier): Promise<supertest.Response> {
-  return supertest.agent(app).get(`/layers/${id.id}/${id.version}`).set('Content-Type', 'application/json');
+export async function getHistory(directory: string): Promise<supertest.Response> {
+  directory = encodeURIComponent(directory);
+  return supertest.agent(app).get(`/layers/${directory}`).set('Content-Type', 'application/json');
 }
 
-export async function createHistory(id: ILayerHistoryIdentifier): Promise<supertest.Response> {
-  return supertest.agent(app).post(`/layers/${id.id}/${id.version}`).set('Content-Type', 'application/json');
+export async function createHistory(directory: string): Promise<supertest.Response> {
+  directory = encodeURIComponent(directory);
+  return supertest.agent(app).post(`/layers/${directory}`).set('Content-Type', 'application/json');
 }
 
-export async function updateHistoryStatus(id: ILayerHistoryIdentifier, body: Record<string, unknown>): Promise<supertest.Response> {
-  return supertest.agent(app).put(`/layers/${id.id}/${id.version}`).set('Content-Type', 'application/json').send(body);
+export async function updateHistoryStatus(directory: string, body: Record<string, unknown>): Promise<supertest.Response> {
+  directory = encodeURIComponent(directory);
+  return supertest.agent(app).put(`/layers/${directory}`).set('Content-Type', 'application/json').send(body);
 }

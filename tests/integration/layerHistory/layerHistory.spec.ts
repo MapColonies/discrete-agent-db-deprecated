@@ -3,30 +3,41 @@ import { container } from 'tsyringe';
 import { LayerHistoryRepository } from '../../../src/DAL/repositories/layerHistoryRepository';
 import { registerTestValues } from '../testContainerConfig';
 import { registerRepository, initTypeOrmMocks, findOneMock, saveMock } from '../../mocks/DBMock';
-import { ILayerHistoryIdentifier, ILayerHistoryResponse } from '../../../src/layerHistory/interfaces';
+import { ILayerHistoryResponse } from '../../../src/layerHistory/interfaces';
 import { LayerHistory, ProgressStatus } from '../../../src/DAL/entity/layerHistory';
 import * as requestSender from './helpers/requestSender';
 
 //test data
-const historyIdentifier: ILayerHistoryIdentifier = {
+const historyIdentifier = '1/1';
+const inProgressHistoryResponse: ILayerHistoryResponse = {
+  directory: '1/1',
   id: '7c737f81-705e-4455-83e5-83107abcf2e9',
   version: 'testVersion',
-};
-const pendingHistoryResponse: ILayerHistoryResponse = {
-  id: '7c737f81-705e-4455-83e5-83107abcf2e9',
-  version: 'testVersion',
-  status: ProgressStatus.PENDING,
+  status: ProgressStatus.IN_PROGRESS,
 };
 const triggeredHistoryResponse: ILayerHistoryResponse = {
+  directory: '1/1',
   id: '7c737f81-705e-4455-83e5-83107abcf2e9',
   version: 'testVersion',
   status: ProgressStatus.TRIGGERED,
 };
-const pendingHistoryRecord = new LayerHistory('7c737f81-705e-4455-83e5-83107abcf2e9', 'testVersion');
-const triggeredHistoryRecord = new LayerHistory('7c737f81-705e-4455-83e5-83107abcf2e9', 'testVersion', ProgressStatus.TRIGGERED);
-const findRequest = {
+const newInProgressHistoryRecord = new LayerHistory({
+  directory: '1/1',
+});
+const inProgressHistoryRecord = new LayerHistory({
+  directory: '1/1',
   layerId: '7c737f81-705e-4455-83e5-83107abcf2e9',
   version: 'testVersion',
+  status: ProgressStatus.IN_PROGRESS,
+});
+const triggeredHistoryRecord = new LayerHistory({
+  directory: '1/1',
+  layerId: '7c737f81-705e-4455-83e5-83107abcf2e9',
+  version: 'testVersion',
+  status: ProgressStatus.TRIGGERED,
+});
+const findRequest = {
+  directory: '1/1',
 };
 
 describe('LayerHistory', function () {
@@ -43,21 +54,23 @@ describe('LayerHistory', function () {
 
   describe('Happy Path', function () {
     it('get should return 200 status code and the history', async function () {
-      findOneMock.mockResolvedValue(pendingHistoryRecord);
+      findOneMock.mockResolvedValue(inProgressHistoryRecord);
 
       const response = await requestSender.getHistory(historyIdentifier);
 
       expect(response.status).toBe(httpStatusCodes.OK);
-      expect(response.body).toEqual(pendingHistoryResponse);
+      expect(response.body).toEqual(inProgressHistoryResponse);
       expect(findOneMock).toHaveBeenCalledTimes(1);
       expect(findOneMock).toHaveBeenCalledWith(findRequest);
     });
 
     it('update should return 200 status code and update the history', async function () {
       saveMock.mockResolvedValue(triggeredHistoryRecord);
-      findOneMock.mockResolvedValue(pendingHistoryRecord);
+      findOneMock.mockResolvedValue(inProgressHistoryRecord);
 
       const response = await requestSender.updateHistoryStatus(historyIdentifier, {
+        id: '7c737f81-705e-4455-83e5-83107abcf2e9',
+        version: 'testVersion',
         status: ProgressStatus.TRIGGERED,
       });
 
@@ -70,15 +83,15 @@ describe('LayerHistory', function () {
     });
 
     it('create should return 201 status code and create history', async function () {
-      saveMock.mockResolvedValue(pendingHistoryRecord);
+      saveMock.mockResolvedValue(inProgressHistoryRecord);
       findOneMock.mockResolvedValue(undefined);
 
       const response = await requestSender.createHistory(historyIdentifier);
 
       expect(response.status).toBe(httpStatusCodes.CREATED);
-      expect(response.body).toEqual(pendingHistoryResponse);
+      expect(response.body).toEqual(inProgressHistoryResponse);
       expect(saveMock).toHaveBeenCalledTimes(1);
-      expect(saveMock).toHaveBeenCalledWith(pendingHistoryRecord);
+      expect(saveMock).toHaveBeenCalledWith(newInProgressHistoryRecord);
       expect(findOneMock).toHaveBeenCalledTimes(1);
       expect(findOneMock).toHaveBeenCalledWith(findRequest);
     });
@@ -122,7 +135,7 @@ describe('LayerHistory', function () {
     });
 
     it('create should return 409 status code when given existing id', async function () {
-      findOneMock.mockResolvedValue(pendingHistoryRecord);
+      findOneMock.mockResolvedValue(inProgressHistoryRecord);
       const response = await requestSender.createHistory(historyIdentifier);
 
       expect(response.status).toBe(httpStatusCodes.CONFLICT);
@@ -156,7 +169,7 @@ describe('LayerHistory', function () {
     });
 
     it('update should return 500 status on save db error', async function () {
-      findOneMock.mockResolvedValue(pendingHistoryRecord);
+      findOneMock.mockResolvedValue(inProgressHistoryRecord);
       saveMock.mockRejectedValue(new Error('test db error'));
 
       const response = await requestSender.updateHistoryStatus(historyIdentifier, {

@@ -18,11 +18,18 @@
     "username": "test",
     "password": "test",
     "database": "test",
-    "synchronize": false,
+    "synchronize": true,
     "logging": false,
-    "entities": ["**/DAL/entity/**/*.js"],
-    "migrations": ["**/DAL/migration/**/*.js", "**/DAL/migration/**/*.ts"],
-    "subscribers": ["**/DAL/subscriber/**/*.js"],
+    "entities": [
+      "**/DAL/entity/**/*.js"
+    ],
+    "migrations": [
+      "**/DAL/migration/**/*.js",
+      "**/DAL/migration/**/*.ts"
+    ],
+    "subscribers": [
+      "**/DAL/subscriber/**/*.js"
+    ],
     "cli": {
       "entitiesDir": "src/DAL/entity",
       "migrationsDir": "src/DAL/migration",
