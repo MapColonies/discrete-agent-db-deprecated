@@ -13,29 +13,22 @@
   },
   "typeOrm": {
     "type": "postgres",
-    "host": "localhost",
+    "host": "10.8.1.15",
     "port": 5432,
-    "username": "test",
-    "password": "test",
+    "username": "avi",
+    "password": "",
     "enableSslAuth": false,
     "sslPaths": {
-      "ca": "",
-      "key": "",
-      "cert": ""
+      "ca": "/home/shimon/Downloads/rootCA.crt",
+      "key": "/home/shimon/Downloads/avi.key",
+      "cert": "/home/shimon/Downloads/avi.crt"
     },
-    "database": "test",
-    "synchronize": false,
+    "database": "discrete-ingestion",
+    "synchronize": true,
     "logging": false,
-    "entities": [
-      "**/DAL/entity/**/*.js"
-    ],
-    "migrations": [
-      "**/DAL/migration/**/*.js",
-      "**/DAL/migration/**/*.ts"
-    ],
-    "subscribers": [
-      "**/DAL/subscriber/**/*.js"
-    ],
+    "entities": ["**/DAL/entity/**/*.js"],
+    "migrations": ["**/DAL/migration/**/*.js", "**/DAL/migration/**/*.ts"],
+    "subscribers": ["**/DAL/subscriber/**/*.js"],
     "cli": {
       "entitiesDir": "src/DAL/entity",
       "migrationsDir": "src/DAL/migration",
