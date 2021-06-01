@@ -7,11 +7,11 @@ let statusManager: StatusManager;
 const isConnectedMock = jest.fn();
 const initMock = jest.fn();
 const getSettingsRepositoryMock = jest.fn();
-const connectionManagerMock = ({
+const connectionManagerMock = {
   isConnected: isConnectedMock,
   init: initMock,
   getSettingsRepository: getSettingsRepositoryMock,
-} as unknown) as ConnectionManager;
+} as unknown as ConnectionManager;
 const getSettingMock = jest.fn();
 const upsertSettingMock = jest.fn();
 const repositoryMock = {
