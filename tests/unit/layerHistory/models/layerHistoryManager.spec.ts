@@ -9,11 +9,11 @@ let layerHistoryManager: LayerHistoryManager;
 const isConnectedMock = jest.fn();
 const initMock = jest.fn();
 const getLayerHistoryRepository = jest.fn();
-const connectionManagerMock = ({
+const connectionManagerMock = {
   isConnected: isConnectedMock,
   init: initMock,
   getLayerHistoryRepository: getLayerHistoryRepository,
-} as unknown) as ConnectionManager;
+} as unknown as ConnectionManager;
 const getMock = jest.fn();
 const upsertMock = jest.fn();
 const existsMock = jest.fn();

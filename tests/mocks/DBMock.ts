@@ -22,7 +22,7 @@ const initTypeOrmMocks = (): void => {
   });
 };
 const registerRepository = <T>(key: ObjectType<T>, instance: T): void => {
-  const repo = (instance as unknown) as Repository<ObjectLiteral>;
+  const repo = instance as unknown as Repository<ObjectLiteral>;
   repo.findOne = findOneMock;
   repo.save = saveMock;
   repo.find = findMock;

@@ -54,7 +54,7 @@ describe('Status', function () {
   describe('Bad Path', function () {
     // All requests with status code of 400
     it('update should return status code 400 on invalid request', async function () {
-      const response = await requestSender.updateStatus(({ invalid: 'data' } as unknown) as IStatus);
+      const response = await requestSender.updateStatus({ invalid: 'data' } as unknown as IStatus);
 
       expect(saveMock).toHaveBeenCalledTimes(0);
       expect(response.status).toBe(httpStatusCodes.BAD_REQUEST);
