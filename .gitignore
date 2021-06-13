@@ -1,5 +1,5 @@
-
 src/DAL/migration/ormConfig.json
+config/local*
 
 # Logs
 logs
