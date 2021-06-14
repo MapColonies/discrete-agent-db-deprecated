@@ -21,7 +21,7 @@ export class ConnectionManager {
       const options = this.createConnectionOptions(connectionConfig);
       this.connection = await createConnection(options);
     } catch (err) {
-      const errString = JSON.stringify(err);
+      const errString = JSON.stringify(err, Object.getOwnPropertyNames(err));
       this.logger.log('error', `failed to connect to database: ${errString}`);
       throw HTTP_INTERNAL_SERVER_ERROR;
     }
