@@ -17,7 +17,7 @@
     "logging": "DB_LOGGING",
     "synchronize": "DB_SYNCHRONIZE",
     "enableSslAuth": "DB_SSL_ENABLE",
-    "ssl": {
+    "sslPaths": {
       "ca": "DB_SSL_CA",
       "key": "DB_SSL_KEY",
       "cert": "DB_SSL_CERT"
