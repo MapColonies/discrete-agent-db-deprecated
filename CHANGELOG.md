@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/MapColonies/discrete-agent-db/compare/v1.0.5...v1.1.0) (2021-08-09)
+
+
+### Features
+
+* fix audit and add ssl config format ([#35](https://github.com/MapColonies/discrete-agent-db/issues/35)) ([701dbbc](https://github.com/MapColonies/discrete-agent-db/commit/701dbbc51b0303c5b6600ce83c43958052f7c41e))
+
+
+### Bug Fixes
+
+* db connection error log ([#30](https://github.com/MapColonies/discrete-agent-db/issues/30)) ([a4fe3d9](https://github.com/MapColonies/discrete-agent-db/commit/a4fe3d97281af6f0e034951eed696b4feb5c6a6d))
+* misspelling in custom env ([#31](https://github.com/MapColonies/discrete-agent-db/issues/31)) ([08571aa](https://github.com/MapColonies/discrete-agent-db/commit/08571aaad04ea045d17d90a65e9bd21fcc543d66))
+
 ### [1.0.5](https://github.com/MapColonies/discrete-agent-db/compare/v1.0.4...v1.0.5) (2021-06-13)
 
 ### [1.0.4](https://github.com/MapColonies/discrete-agent-db/compare/v1.0.3...v1.0.4) (2021-06-13)
