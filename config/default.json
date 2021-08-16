@@ -28,12 +28,6 @@
     "logging": false,
     "entities": [
       "**/DAL/entity/**/*.js"
-    ],
-    "subscribers": [
-      "**/DAL/subscriber/**/*.js"
-    ],
-    "cli": {
-      "entitiesDir": "src/DAL/entity"
-    }
+    ]
   }
 }
