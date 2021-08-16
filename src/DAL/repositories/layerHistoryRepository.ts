@@ -29,9 +29,7 @@ export class LayerHistoryRepository extends Repository<LayerHistory> {
   public async upsert(layer: LayerHistory): Promise<LayerHistory> {
     this.appLogger.log('info', `upserting history for "${layer.directory}".`);
     try {
-      console.log(JSON.stringify(layer));
       return await this.save(layer);
-      //this.cr;
     } catch (err) {
       this.appLogger.log('error', `failed to upsert history: ${JSON.stringify(layer)}. error: ${JSON.stringify(err)}`);
       throw HTTP_INTERNAL_SERVER_ERROR;
