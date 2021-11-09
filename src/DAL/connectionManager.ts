@@ -11,6 +11,7 @@ import { LayerHistoryRepository } from './repositories/layerHistoryRepository';
 @singleton()
 export class ConnectionManager {
   private connection?: Connection;
+  private connectionStatusPromise?: Promise<Connection>;
 
   public constructor(@inject(Services.LOGGER) private readonly logger: ILogger, @inject(Services.CONFIG) private readonly config: IConfig) {}
 
@@ -18,8 +19,10 @@ export class ConnectionManager {
     const connectionConfig = this.config.get<IDbConfig>('typeOrm');
     this.logger.log('info', `connection to database ${connectionConfig.database as string} on ${connectionConfig.host as string}`);
     try {
-      const options = this.createConnectionOptions(connectionConfig);
-      this.connection = await createConnection(options);
+      if (this.connectionStatusPromise === undefined) {
+        this.connectionStatusPromise = createConnection(this.createConnectionOptions(connectionConfig));
+      }
+      this.connection = await this.connectionStatusPromise;
     } catch (err) {
       const errString = JSON.stringify(err, Object.getOwnPropertyNames(err));
       this.logger.log('error', `failed to connect to database: ${errString}`);
