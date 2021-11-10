@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.1](https://github.com/MapColonies/discrete-agent-db/compare/v1.2.0...v1.2.1) (2021-11-10)
+
+
+### Bug Fixes
+
+* db coonection duplication ([#38](https://github.com/MapColonies/discrete-agent-db/issues/38)) ([6a7a747](https://github.com/MapColonies/discrete-agent-db/commit/6a7a74758b121faf96443cbd1c8ed1d63c2a3418))
+
 ## [1.2.0](https://github.com/MapColonies/discrete-agent-db/compare/v1.1.0...v1.2.0) (2021-08-16)
 
 
