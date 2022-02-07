@@ -1,10 +1,11 @@
 -- v1.1.0 db creation script --
 -- please note that the update date is updated by typeOrm and not by trigger --
 
-CREATE TYPE public."operation_status_enum" AS ENUM
+SET SCHEMA 'public'; -- CHANGE SCHEMA NAME TO MATCH ENVIRONMENT
+CREATE TYPE "operation_status_enum" AS ENUM
     ('inProgress', 'triggered', 'failed');
 
-CREATE TABLE public."layer_history"
+CREATE TABLE "layer_history"
 (
   "directory" character varying(300) NOT NULL,
   "layerId" character varying(300),
@@ -15,7 +16,7 @@ CREATE TABLE public."layer_history"
   CONSTRAINT "layer_history_pkey" PRIMARY KEY (directory)
 );
 
-CREATE TABLE public."setting"
+CREATE TABLE "setting"
 (
   "key" character varying(300) NOT NULL,
   "value" character varying(300) NOT NULL,

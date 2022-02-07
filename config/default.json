@@ -23,7 +23,8 @@
       "key": "",
       "cert": ""
     },
-    "database": "test",
+    "database": "raster",
+    "schema": "public",
     "synchronize": false,
     "logging": false,
     "entities": [

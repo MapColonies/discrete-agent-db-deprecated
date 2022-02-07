@@ -14,6 +14,7 @@
     "username": "DB_USER",
     "password": "DB_PASSWORD",
     "database": "DB_NAME",
+    "schema": "DB_SCHEMA",
     "logging": "DB_LOGGING",
     "synchronize": "DB_SYNCHRONIZE",
     "enableSslAuth": {
