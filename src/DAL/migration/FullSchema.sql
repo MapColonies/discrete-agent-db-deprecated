@@ -1,7 +1,7 @@
 -- v1.1.0 db creation script --
 -- please note that the update date is updated by typeOrm and not by trigger --
 
-SET SCHEMA 'public'; -- CHANGE SCHEMA NAME TO MATCH ENVIRONMENT
+SET search_path TO 'DiscreteAgentDB', public; -- CHANGE SCHEMA NAME TO MATCH ENVIRONMENT
 CREATE TYPE "operation_status_enum" AS ENUM
     ('inProgress', 'triggered', 'failed');
 
