@@ -1,0 +1,6 @@
+apiVersion: v2
+name: discrete-agent-db
+description: A Helm chart for discrete-agent-db service
+type: application
+version: 2.2.0
+appVersion: 2.2.0
