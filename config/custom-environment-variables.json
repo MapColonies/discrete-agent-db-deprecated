@@ -19,10 +19,7 @@
       "__name": "DB_LOGGING",
       "__format": "boolean"
     },
-    "enableSslAuth": {
-      "__name": "DB_SSL_ENABLE",
-      "__format": "boolean"
-    },
+    "enableSslAuth": "DB_SSL_ENABLE",
     "sslPaths": {
       "ca": "DB_SSL_CA",
       "key": "DB_SSL_KEY",

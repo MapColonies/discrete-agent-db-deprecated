@@ -10,9 +10,9 @@ data:
   OPENAPI_FILE_PATH: {{ .Values.env.openApiFilPath | quote }}
   LOG_LEVEL: {{ .Values.env.logLevel | quote }}
   SERVER_PORT: {{ .Values.env.port | quote }}
-  DB_HOST: {{ .Values.global.db.host | quote }}
-  DB_PORT: {{ .Values.global.db.port | quote}}
-  DB_NAME: {{ .Values.env.db.database | quote }}
+  DB_HOST: {{ .Values.rasterCommon.db.host | quote }}
+  DB_PORT: {{ .Values.rasterCommon.db.port | quote}}
+  DB_NAME: {{ .Values.rasterCommon.db.database | quote }}
   DB_SCHEMA: {{ .Values.env.db.schema | quote }}
   DB_LOGGING: {{ .Values.env.db.logging | quote }}
   {{ if .Values.env.tracing.enabled }}

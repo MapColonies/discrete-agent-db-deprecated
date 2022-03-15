@@ -3,8 +3,11 @@ global:
   tracing: {}
   metrics: {}
   environment: {}
+
+rasterCommon:
   db:
     host: "localhost"
+    database: "raster"
     port: 5432
     sslEnabled: false
     secrets:
@@ -76,7 +79,6 @@ env:
     enabled: false
     url: "http://localhost:55681/v1/metrics"
   db:
-    database: "raster"
     schema: "public"
     logging: false
   

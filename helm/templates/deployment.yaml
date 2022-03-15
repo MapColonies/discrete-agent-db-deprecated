@@ -8,7 +8,7 @@
 
 {{ $caSecretName := ternary .Values.authentication.ca.externalSecretName (printf "%s%s" .Release.Name "-root-ca") .Values.authentication.ca.useExternal }}
 {{ $sslSecretName := ternary .Values.authentication.ssl.externalSecretName (printf "%s%s" .Release.Name "-open-ssl") .Values.authentication.ssl.useExternal }}
-{{ $postgresSecretName := ternary .Values.global.db.secrets.externalSecretName (printf "%s%s" .Release.Name "-postgres-secret") .Values.global.db.secrets.useExternal }}
+{{ $postgresSecretName := ternary .Values.rasterCommon.db.secrets.externalSecretName (printf "%s%s" .Release.Name "-postgres-secret") .Values.rasterCommon.db.secrets.useExternal }}
 
 {{- if .Values.authentication.ca.enabled }}
 {{- if and .Values.authentication.ca.useExternal (not .Values.authentication.ca.externalSecretName) }}
@@ -81,7 +81,7 @@ spec:
                   name: {{ $postgresSecretName }}
                   key: password
             - name: DB_SSL_ENABLE
-              value: {{ quote .Values.global.db.sslEnabled }}
+              value: {{ quote .Values.rasterCommon.db.sslEnabled }}
             - name: DB_SSL_CA
               value: {{ quote .Values.shared.ssl.CA_FILE_LOCATION }}
             - name: DB_SSL_KEY
@@ -110,7 +110,7 @@ spec:
               mountPath: "/etc/ssl/openssl.cnf"
               subPath: "openssl.cnf"
             {{- end }}
-          {{- if .Values.global.db.sslEnabled }}
+          {{- if .Values.rasterCommon.db.sslEnabled }}
             - mountPath: {{ .Values.shared.ssl.CA_DIR }}
               name: ca-file
             - mountPath: {{ .Values.shared.ssl.KEY_DIR }}
@@ -133,7 +133,7 @@ spec:
           secret:
             secretName: {{ $sslSecretName }}
         {{- end }}
-      {{- if .Values.global.db.sslEnabled }}
+      {{- if .Values.rasterCommon.db.sslEnabled }}
         - name: ca-file
           secret:
             secretName: {{ $postgresSecretName }}
