@@ -16,7 +16,6 @@
     "database": "DB_NAME",
     "schema": "DB_SCHEMA",
     "logging": "DB_LOGGING",
-    "synchronize": "DB_SYNCHRONIZE",
     "enableSslAuth": {
       "__name": "DB_SSL_ENABLE",
       "__format": "boolean"
