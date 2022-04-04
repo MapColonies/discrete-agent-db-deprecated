@@ -30,6 +30,16 @@ image:
   repository: "discrete-agent-db"
   tag: "latest"
 
+authentication:  
+  ca:
+    enabled: false
+    useExternal: false
+    externalSecretName: ""
+  ssl:
+    enabled: false
+    useExternal: false
+    externalSecretName: ""
+
 # ====================================================================================================
 # Local certificate files variables
 # ====================================================================================================

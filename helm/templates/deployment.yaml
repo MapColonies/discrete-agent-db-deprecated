@@ -6,7 +6,21 @@
 
 {{- if .Values.enabled -}}
 
+{{ $caSecretName := ternary .Values.authentication.ca.externalSecretName (printf "%s%s" .Release.Name "-root-ca") .Values.authentication.ca.useExternal }}
+{{ $sslSecretName := ternary .Values.authentication.ssl.externalSecretName (printf "%s%s" .Release.Name "-open-ssl") .Values.authentication.ssl.useExternal }}
 {{ $postgresSecretName := ternary .Values.rasterCommon.db.secrets.externalSecretName (printf "%s%s" .Release.Name "-postgres-secret") .Values.rasterCommon.db.secrets.useExternal }}
+
+{{- if .Values.authentication.ca.enabled }}
+{{- if and .Values.authentication.ca.useExternal (not .Values.authentication.ca.externalSecretName) }}
+{{- fail "When using external ca secret the value for .Values.authentication.ca.externalSecretName should be set" }}
+{{- end }}
+{{- end }}
+
+{{- if .Values.authentication.ssl.enabled }}
+{{- if and .Values.authentication.ssl.useExternal (not .Values.authentication.ssl.externalSecretName) }}
+{{- fail "When using external ssl secret the value for .Values.authentication.ssl.externalSecretName should be set" }}
+{{- end }}
+{{- end }}
 
 apiVersion: apps/v1
 kind: Deployment
@@ -48,6 +62,12 @@ spec:
           image: {{ $cloudProviderDockerRegistryUrl }}{{ .repository }}:{{ .tag }}
           {{- end }}
           env:
+            {{- if .Values.authentication.ca.enabled }}
+            - name: REQUESTS_CA_BUNDLE
+              value: '/usr/local/share/ca-certificates/ca.crt'
+            - name: NODE_EXTRA_CA_CERTS
+              value: "[/usr/local/share/ca-certificates/ca.crt]"
+            {{- end }}            
             - name: SERVER_PORT
               value: {{ .Values.env.targetPort | quote }}
             - name: DB_USER
@@ -81,19 +101,38 @@ spec:
               path: /liveness
               port: {{ .Values.env.targetPort }}
           volumeMounts:
-          {{- if .Values.rasterCommon.db.sslEnabled }}
+            {{- if .Values.authentication.ca.enabled }}
+            - name: root-ca
+              mountPath: "/usr/local/share/ca-certificates"
+            {{- end }}
+            {{- if .Values.authentication.ssl.enabled }}
+            - name: open-ssl
+              mountPath: "/etc/ssl/openssl.cnf"
+              subPath: "openssl.cnf"
+            {{- end }}          
+            {{- if .Values.rasterCommon.db.sslEnabled }}
             - mountPath: /opt/certs/ca/
               name: ca-file
             - mountPath: /opt/certs/key/
               name: key-file
             - mountPath: /opt/certs/cert/
               name: cert-file
-          {{- end }}
+            {{- end }}
           {{- if .Values.resources.enabled }}
           resources:
             {{- toYaml .Values.resources.value | nindent 12 }}
           {{- end }}
       volumes:
+        {{- if .Values.authentication.ca.enabled }}
+        - name: root-ca
+          secret:
+            secretName: {{ $caSecretName }}
+        {{- end }}
+        {{- if .Values.authentication.ssl.enabled }}
+        - name: open-ssl
+          secret:
+            secretName: {{ $sslSecretName }}
+        {{- end }}      
       {{- if .Values.rasterCommon.db.sslEnabled }}
         - name: ca-file
           secret:
