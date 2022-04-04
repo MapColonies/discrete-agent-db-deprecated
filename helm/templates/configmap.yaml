@@ -12,7 +12,7 @@ data:
   SERVER_PORT: {{ .Values.env.port | quote }}
   DB_HOST: {{ .Values.rasterCommon.db.host | quote }}
   DB_PORT: {{ .Values.rasterCommon.db.port | quote}}
-  DB_NAME: {{ .Values.rasterCommon.db.database | quote }}
+  DB_NAME: {{ .Values.rasterCommon.db.name | quote }}
   DB_SCHEMA: {{ .Values.env.db.schema | quote }}
   DB_LOGGING: {{ .Values.env.db.logging | quote }}
   {{ if .Values.env.tracing.enabled }}
@@ -22,5 +22,5 @@ data:
   {{ if .Values.env.metrics.enabled }}
   TELEMETRY_METRICS_ENABLED: 'true'
   TELEMETRY_METRICS_URL: {{ $metricsUrl }}
-  {{ end }}  
+  {{ end }}
 {{- end }}

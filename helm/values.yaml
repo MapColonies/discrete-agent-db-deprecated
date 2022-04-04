@@ -7,7 +7,7 @@ global:
 rasterCommon:
   db:
     host: "localhost"
-    database: "raster"
+    name: "raster"
     port: 5432
     sslEnabled: false
     secrets:
@@ -19,6 +19,7 @@ environment: "development"
 replicaCount: 1
 initialDelaySeconds: 60
 nodePort: 30030 #for minikube deployment only
+resetOnConfigChange: true
 
 cloudProvider:
   dockerRegistryUrl: "my-registry-url.io"
@@ -29,7 +30,7 @@ image:
   repository: "discrete-agent-db"
   tag: "latest"
 
-authentication:
+authentication:  
   ca:
     enabled: false
     useExternal: false
@@ -45,8 +46,6 @@ authentication:
 
 local:
   certs:
-    ca: "certs/ca.crt"
-    ssl: "certs/openssl.cnf"
     postgres:
       ca: "certs/postgres/rootCA.crt"
       key: "certs/postgres/avi.key"
@@ -56,15 +55,6 @@ postgresSecret:
   enabled: true
   userName: "postgres"
   password: "postgres"
-
-shared:
-  ssl:
-    CA_DIR: /opt/certs/ca/
-    KEY_DIR: /opt/certs/key/
-    CERT_DIR: /opt/certs/cert/
-    CA_FILE_LOCATION: /opt/certs/ca/ca.pem
-    KEY_FILE_LOCATION: /opt/certs/key/key.pem
-    CERT_FILE_LOCATION: /opt/certs/cert/cert.pem
 
 env:
   port: 80
