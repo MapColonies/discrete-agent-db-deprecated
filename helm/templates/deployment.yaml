@@ -62,12 +62,12 @@ spec:
           image: {{ $cloudProviderDockerRegistryUrl }}{{ .repository }}:{{ .tag }}
           {{- end }}
           env:
-            {{- if .Values.authentication.ca.enabled }}
+            {{- if .Values.rasterCommon.ca.secretName }}
             - name: REQUESTS_CA_BUNDLE
-              value: '/usr/local/share/ca-certificates/ca.crt'
+              value: {{ printf "%s/%s" .Values.rasterCommon.ca.path .Values.rasterCommon.ca.key | quote }}
             - name: NODE_EXTRA_CA_CERTS
-              value: "[/usr/local/share/ca-certificates/ca.crt]"
-            {{- end }}            
+              value: {{ printf "[%s/%s]" .Values.rasterCommon.ca.path .Values.rasterCommon.ca.key | quote }}
+            {{- end }}          
             - name: SERVER_PORT
               value: {{ .Values.env.targetPort | quote }}
             - name: DB_USER
@@ -101,9 +101,10 @@ spec:
               path: /liveness
               port: {{ .Values.env.targetPort }}
           volumeMounts:
-            {{- if .Values.authentication.ca.enabled }}
-            - name: root-ca
-              mountPath: "/usr/local/share/ca-certificates"
+            {{- if .Values.rasterCommon.ca.secretName }}
+            - mountPath: {{ printf "%s/%s" .Values.rasterCommon.ca.path .Values.rasterCommon.ca.key | quote }}
+              name: root-ca
+              subPath: {{ quote .Values.rasterCommon.ca.key }}
             {{- end }}
             {{- if .Values.authentication.ssl.enabled }}
             - name: open-ssl
@@ -123,10 +124,10 @@ spec:
             {{- toYaml .Values.resources.value | nindent 12 }}
           {{- end }}
       volumes:
-        {{- if .Values.authentication.ca.enabled }}
+        {{- if .Values.rasterCommon.ca.secretName }}
         - name: root-ca
           secret:
-            secretName: {{ $caSecretName }}
+            secretName: {{ .Values.rasterCommon.ca.secretName }}
         {{- end }}
         {{- if .Values.authentication.ssl.enabled }}
         - name: open-ssl

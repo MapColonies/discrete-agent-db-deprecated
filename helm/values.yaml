@@ -5,6 +5,10 @@ global:
   environment: {}
 
 rasterCommon:
+  ca:
+    secretName: 'tailim tovim'
+    path: '/usr/local/share/ca-certificate'
+    key: 'ca.crt'
   db:
     host: "localhost"
     name: "raster"
