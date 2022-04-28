@@ -6,7 +6,7 @@ global:
 
 rasterCommon:
   ca:
-    secretName: 'tailim tovim'
+    secretName: ''
     path: '/usr/local/share/ca-certificate'
     key: 'ca.crt'
   db:
